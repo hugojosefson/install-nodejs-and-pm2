@@ -9,35 +9,46 @@ NODEJS_USER=nodejs
 NVM_VERSION=0.33.11
 NODEJS_VERSION=10
 
-NODEJS_HOME_DIR=/var/lib/$NODEJS_USER
-NVM_DIR=$NODEJS_HOME_DIR/.nvm
+NODEJS_HOME_DIR=/var/lib/${NODEJS_USER}
+NVM_DIR=${NODEJS_HOME_DIR}/.nvm
 
 ## Install Node.js
-getent passwd | grep ^nodejs: || useradd --system --create-home --home-dir $NODEJS_HOME_DIR $NODEJS_USER
-su - $NODEJS_USER -c "mkdir -p $NVM_DIR"
-su - $NODEJS_USER -c "curl -o- https://raw.githubusercontent.com/creationix/nvm/v$NVM_VERSION/install.sh | bash"
-su - $NODEJS_USER -c "nvm install $NODEJS_VERSION"
-su - $NODEJS_USER -c "nvm alias default $NODEJS_VERSION"
-su - $NODEJS_USER -c "npm install -g npm"
-su - $NODEJS_USER -c "npm install -g yarn"
+getent passwd | grep ^nodejs: || useradd --system --create-home --home-dir ${NODEJS_HOME_DIR} ${NODEJS_USER}
+su - ${NODEJS_USER} -c "mkdir -p $NVM_DIR"
+su - ${NODEJS_USER} -c "curl -o- https://raw.githubusercontent.com/creationix/nvm/v${NVM_VERSION}/install.sh | bash"
+su - ${NODEJS_USER} -c "nvm install ${NODEJS_VERSION}"
+su - ${NODEJS_USER} -c "nvm alias default ${NODEJS_VERSION}"
+su - ${NODEJS_USER} -c "npm install -g npm"
+su - ${NODEJS_USER} -c "npm install -g yarn"
 
 ## Install pm2
-su - $NODEJS_USER -c "npm install -g pm2@latest"
-su - $NODEJS_USER -c "pm2 update"
-. $NVM_DIR/nvm.sh && pm2 startup -u $NODEJS_USER
+su - ${NODEJS_USER} -c "npm install -g pm2@latest"
+su - ${NODEJS_USER} -c "pm2 update"
+
+. ${NVM_DIR}/nvm.sh && \
+    pm2 startup \
+        --service-name pm2 \
+        --user ${NODEJS_USER} \
+        --hp ${NODEJS_HOME_DIR}
 
 ## Instructions
-su - $NODEJS_USER -c "node -e \"console.log(\\\`
+su - ${NODEJS_USER} -c "node -e \"console.log(\\\`
 
 
 ==============================================================================
-Node.js is now installed for user $NODEJS_USER. This message is proof, because
-it is generated from within Node.js as the $NODEJS_USER user.
+Node.js is now installed for user ${NODEJS_USER}. This message is proof, because
+it is generated from within Node.js as the ${NODEJS_USER} user.
 
-pm2 runs on boot, as user $NODEJS_USER.
+pm2 runs on boot, as user ${NODEJS_USER}.
 
-Log in as $NODEJS_USER to issue pm2 commands:
-\# su - $NODEJS_USER
-\$ pm2 status
+You can manage the pm2 service like this:
+\# service pm2 status
+\# service pm2 start
+\# service pm2 stop
+\# service pm2 restart
+
+For more pm2 commands, log in as ${NODEJS_USER}:
+\# su - ${NODEJS_USER}
+\$ pm2 help
 ==============================================================================
 \\\`)\""
