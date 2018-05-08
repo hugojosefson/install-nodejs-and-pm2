@@ -36,21 +36,32 @@ su - ${NODEJS_USER} -c "node -e \"console.log(\\\`
 
 
 ==============================================================================
-Node.js is now installed for user ${NODEJS_USER}. This message is proof, because
-it is generated from within Node.js as the ${NODEJS_USER} user.
+Node.js is now installed for user ${NODEJS_USER}.
+
+This message is proof, because it is generated from within Node.js as the
+${NODEJS_USER} user.
 
 pm2 runs on boot, as user ${NODEJS_USER}.
 
 You can manage the pm2 service like this:
-\# service pm2 status
-\# service pm2 start
-\# service pm2 stop
-\# service pm2 restart
+
+    \# service pm2 status
+    \# service pm2 start
+    \# service pm2 stop
+    \# service pm2 restart
 
 For more pm2 commands, log in as ${NODEJS_USER}:
-\# su - ${NODEJS_USER}
-\$ pm2 help
-\$ pm2 status
-\$ pm2 logs
+
+    \# su - ${NODEJS_USER}
+
+Example commands, as the ${NODEJS_USER} user:
+
+    \$ pm2 help
+    \$ pm2 status
+    \$ (cd apps/app1/build && pm2 start --name app1 npx -- serve -p 3001)
+    \$ pm2 status
+    \$ pm2 logs
+    \$ pm2 save   # save list of currently running processes, for next restart
+
 ==============================================================================
 \\\`)\""
