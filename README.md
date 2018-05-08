@@ -21,5 +21,5 @@ Tested in RHEL 6.9.
 The script is idempotent, and can be re-run as many times as you like.
 If you have updated for example the desired version numbers in the script,
 or newer versions of the installed packages are available, they will be
-updated if you re-run the script as root.
+updated when you re-run the script as root.
 
