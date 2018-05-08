@@ -17,6 +17,7 @@ getent passwd | grep ^nodejs: || useradd --system --create-home --home-dir $NODE
 su - $NODEJS_USER -c "mkdir -p $NVM_DIR"
 su - $NODEJS_USER -c "curl -o- https://raw.githubusercontent.com/creationix/nvm/v$NVM_VERSION/install.sh | bash"
 su - $NODEJS_USER -c "nvm install $NODEJS_VERSION"
+su - $NODEJS_USER -c "nvm alias default $NODEJS_VERSION"
 su - $NODEJS_USER -c "npm install -g npm"
 su - $NODEJS_USER -c "npm install -g yarn"
 
