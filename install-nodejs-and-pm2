@@ -24,7 +24,7 @@ su - $NODEJS_USER -c "npm install -g yarn"
 ## Install pm2
 su - $NODEJS_USER -c "npm install -g pm2@latest"
 su - $NODEJS_USER -c "pm2 update"
-. $NVM_DIR/nvm.sh && pm2 startup systemv -u $NODEJS_USER
+. $NVM_DIR/nvm.sh && pm2 startup -u $NODEJS_USER
 
 ## Instructions
 su - $NODEJS_USER -c "node -e \"console.log(\\\`
