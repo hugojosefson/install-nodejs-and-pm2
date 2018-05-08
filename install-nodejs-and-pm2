@@ -27,13 +27,17 @@ su - $NODEJS_USER -c "pm2 update"
 . $NVM_DIR/nvm.sh && pm2 startup systemv -u $NODEJS_USER
 
 ## Instructions
-echo
-echo
-echo =======================================================================
-echo Node.js is now installed for user $NODEJS_USER.
-echo pm2 runs on boot, as user $NODEJS_USER.
-echo
-echo Log in as $NODEJS_USER to issue pm2 commands:
-echo \# su - $NODEJS_USER
-echo \$ pm2 status
-echo =======================================================================
+su - $NODEJS_USER -c "node -e \"console.log(\\\`
+
+
+==============================================================================
+Node.js is now installed for user $NODEJS_USER. This message is proof, because
+it is generated from within Node.js as the $NODEJS_USER user.
+
+pm2 runs on boot, as user $NODEJS_USER.
+
+Log in as $NODEJS_USER to issue pm2 commands:
+\# su - $NODEJS_USER
+\$ pm2 status
+==============================================================================
+\\\`)\""
