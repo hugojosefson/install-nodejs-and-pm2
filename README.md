@@ -27,3 +27,8 @@ If you have updated for example the desired version numbers in the script,
 or newer versions of the installed packages are available, they will be
 updated when you re-run the script as root.
 
+## TODO
+
+ * Deploy apps.
+    * Configure a single place (file?) for running all apps.
+    * http://pm2.keymetrics.io/docs/usage/deployment/
