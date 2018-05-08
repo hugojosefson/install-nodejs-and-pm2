@@ -50,5 +50,7 @@ You can manage the pm2 service like this:
 For more pm2 commands, log in as ${NODEJS_USER}:
 \# su - ${NODEJS_USER}
 \$ pm2 help
+\$ pm2 status
+\$ pm2 logs
 ==============================================================================
 \\\`)\""
