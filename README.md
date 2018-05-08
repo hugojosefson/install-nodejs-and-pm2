@@ -10,6 +10,7 @@ Run as `root`:
 
 ```bash
 curl -O install-nodejs-and-pm2 https://raw.githubusercontent.com/hugojosefson/centos-nodejs/master/install-nodejs-and-pm2
+chmod +x install-nodejs-and-pm2
 ./install-nodejs-and-pm2
 ```
 
