@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+## Installs Node.js and pm2
+
+set -e
+
+NODEJS_USER=nodejs
+NVM_VERSION=0.33.11
+NODEJS_VERSION=10
+
+NODEJS_HOME_DIR=/var/lib/$NODEJS_USER
+NVM_DIR=$NODEJS_HOME_DIR/.nvm
+
+useradd --system --create-home --home-dir $NODEJS_HOME_DIR $NODEJS_USER
+su - $NODEJS_USER -c "mkdir -p $NVM_DIR"
+su - $NODEJS_USER -c "curl -o- https://raw.githubusercontent.com/creationix/nvm/v$NVM_VERSION/install.sh | bash"
+su - $NODEJS_USER -c ". $NVM_DIR/nvm.sh && nvm install $NODEJS_VERSION"
+su - $NODEJS_USER -c ". $NVM_DIR/nvm.sh && npm install -g npm && npm install -g pm2"
+
+. $NVM_DIR/nvm.sh && pm2 startup systemv -u $NODEJS_USER
