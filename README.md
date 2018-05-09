@@ -60,7 +60,6 @@ A complete directory structure might look like this:
 apps/
 ├── ecosystem.config.js
 ├── example-app
-│   ├── current -> releases/example-app-1.0.1
 │   └── releases
 │       ├── example-app-1.0.0
 │       │   ├── index.js
@@ -69,7 +68,6 @@ apps/
 │           ├── index.js
 │           └── package.json
 └── second-app
-    ├── current -> releases/second-app-1.1.2
     └── releases
         ├── second-app-1.0.0
         │   ├── index.js
@@ -79,8 +77,8 @@ apps/
             └── package.json
 ```
 
-It is recommended to unpack each app in the `releases/` directory, and symlink `current` to the
-version to use.
+It is recommended to unpack each app in the `releases/` directory, and specify the version to use
+in the common `ecosystem.config.js`.
 
 ## Run and save
 
@@ -135,17 +133,9 @@ env \
 
 ### Switch to new version
 
-On the server, in the app directory, symlink the version you wish to use to `current`.
+On the server, edit the `ecosystem.config.js` file to specify which version to use.
 
-For example:
-
-```bash
-cd ~/apps/example-app
-rm current
-ln -s releases/example-app-1.0.1 current
-```
-
-Then reload the app:
+Then reload the app(s):
 ```bash
 pm2 startOrReload ~/apps/ecosystem.config.js
 ```
