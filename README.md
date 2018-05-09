@@ -1,6 +1,6 @@
 # install-nodejs-and-pm2
 
-Script for installing Node.js and pm2, on a Linux server with for example CentOS or RHEL.
+Script for installing Node.js and [pm2](https://pm2.keymetrics.io/), on a Linux server with for example CentOS or RHEL.
 
 Tested in RHEL 6.9.
 
