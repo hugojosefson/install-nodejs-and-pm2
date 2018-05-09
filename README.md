@@ -7,7 +7,7 @@ Tested in RHEL 6.9.
 ## Get the script
 
 ```bash
-curl -O install-nodejs-and-pm2 https://raw.githubusercontent.com/hugojosefson/install-nodejs-and-pm2/master/install-nodejs-and-pm2
+curl -o install-nodejs-and-pm2 https://raw.githubusercontent.com/hugojosefson/install-nodejs-and-pm2/master/install-nodejs-and-pm2
 chmod +x install-nodejs-and-pm2
 ```
 
