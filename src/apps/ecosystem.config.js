@@ -15,7 +15,7 @@ const standardNodeApp = (options = {}) => {
         throw new Error(`The option 'env.PORT' must be defined for the app named '${options.name}'.`)
     }
     return {
-        cwd: `apps/${options.name}`,
+        cwd: `apps/${options.name}/current`,
         script: 'bash',
         args: `-c "
     set -e
@@ -41,10 +41,11 @@ const standardNodeApp = (options = {}) => {
 
 module.exports = {
     /**
-     * Application configuration section
+     * Add app configurations here.
+     * Un-comment the example-app configuration to try it.
      */
     apps: [
-        // standardNodeApp({name: 'app1', env: {PORT: 3001}}),
+        // standardNodeApp({name: 'example-app', env: {PORT: 3001}}),
         // standardNodeApp({name: 'app2', env: {PORT: 3002}})
     ]
 }
