@@ -4,14 +4,25 @@ Script for installing Node.js and pm2, on a Linux server with for example CentOS
 
 Tested in RHEL 6.9.
 
-## Usage
-
-Run as `root`:
+## Get the script
 
 ```bash
 curl -O install-nodejs-and-pm2 https://raw.githubusercontent.com/hugojosefson/centos-nodejs/master/install-nodejs-and-pm2
 chmod +x install-nodejs-and-pm2
+```
+
+## Run it
+
+Run as `root`:
+
+```bash
 ./install-nodejs-and-pm2
+```
+
+If you want, you can also override environment variables in the script. For example:
+
+```bash
+NODEJS_VERSION=12 NODEJS_HOME_DIR=/srv/nodejs ./install-nodejs-and-pm2
 ```
 
 ## What it does
@@ -22,10 +33,16 @@ chmod +x install-nodejs-and-pm2
  * Sets up `pm2` to run as the `nodejs` user on boot.
  * Prints a message at the end, to prove Node.js was installed correctly.
 
-The script is idempotent, and can be re-run as many times as you like.
-If you have updated for example the desired version numbers in the script,
-or newer versions of the installed packages are available, they will be
-updated when you re-run the script as root.
+The script can be re-run as many times as you like.
+
+If you...
+
+ * change any desired version numbers by setting corresponding
+environment variables, or
+ * change any desired version numbers by editing the script, or
+ * if newer versions of the installed packages are available,
+
+...they will be updated when you re-run the script as root.
 
 ## TODO
 
