@@ -1,4 +1,4 @@
-# centos-nodejs
+# install-nodejs-and-pm2
 
 Script for installing Node.js and pm2, on a Linux server with for example CentOS or RHEL.
 
@@ -7,7 +7,7 @@ Tested in RHEL 6.9.
 ## Get the script
 
 ```bash
-curl -O install-nodejs-and-pm2 https://raw.githubusercontent.com/hugojosefson/centos-nodejs/master/install-nodejs-and-pm2
+curl -O install-nodejs-and-pm2 https://raw.githubusercontent.com/hugojosefson/install-nodejs-and-pm2/master/install-nodejs-and-pm2
 chmod +x install-nodejs-and-pm2
 ```
 
