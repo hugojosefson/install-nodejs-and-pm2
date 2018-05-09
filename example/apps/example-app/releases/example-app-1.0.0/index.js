@@ -8,8 +8,9 @@ const getPort = env => {
     }
 }
 
+const {name, version} = require('./package.json')
 const port = getPort(process.env)
 
 require('express')().listen(port, () => {
-    console.log(`Listening to port ${port}...`)
+    console.log(`${name} version ${version} listening to port ${port}...`)
 })

@@ -31,6 +31,7 @@ NODEJS_VERSION=12 NODEJS_HOME_DIR=/srv/nodejs ./install-nodejs-and-pm2
  * Installs Node.js via `nvm` for the `nodejs` user.
  * Installs latest versions of `npm`, `yarn`, `pm2`.
  * Sets up `pm2` to run as the `nodejs` user on boot.
+ * Sets up `~nodejs/apps/` where configuration and apps live.
  * Prints a message at the end, to prove Node.js was installed correctly.
 
 The script can be re-run as many times as you like.
@@ -44,8 +45,78 @@ environment variables, or
 
 ...they will be updated when you re-run the script as root.
 
-## TODO
+## Configure and deploy apps
 
- * Deploy apps.
-    * Configure a single place (file?) for running all apps.
-    * http://pm2.keymetrics.io/docs/usage/deployment/
+Log in as the `nodejs` user.
+
+The script sets up a directory `apps`, with an `ecosystem.config.js` file.
+
+The `ecosystem.config.js` file is default configured to expect apps to have one directory each in
+the `apps` folder. Add your apps' `pm2` configurations to `ecosystem.config.js`.
+
+A complete directory structure might look like this:
+
+```
+apps/
+├── ecosystem.config.js
+├── example-app
+│   ├── current -> releases/example-app-1.0.1
+│   └── releases
+│       ├── example-app-1.0.0
+│       │   ├── index.js
+│       │   └── package.json
+│       └── example-app-1.0.1
+│           ├── index.js
+│           └── package.json
+└── second-app
+    ├── current -> releases/second-app-1.1.2
+    └── releases
+        ├── second-app-1.0.0
+        │   ├── index.js
+        │   └── package.json
+        └── second-app-1.1.2
+            ├── index.js
+            └── package.json
+```
+
+It is recommended to unpack each app in the `releases/` directory, and symlink `current` to the
+version to use.
+
+## Run and save
+
+To start the apps defined in `apps/ecosystem.config.js`, log in as the `nodejs` user and use these
+commands:
+
+```bash
+# Check current status
+pm2 status
+pm2 dash
+
+# Start or reload defined services
+pm2 startOrReload ~/apps/ecosystem.config.js
+```
+
+Note that `pm2 startOrReload` does not stop any apps you remove from `apps/ecosystem.config.js`.
+You must therefore `pm2 stop` and/or `pm2 delete` them yourself.
+
+### Save
+
+For the apps to start when `pm2` starts, you must save the current process list:
+
+```bash
+# Save current process list for next boot
+pm2 save
+```
+Remember to `pm2 save` whenever you start or stop something that should stay started or stopped!
+
+## Example configuration and apps
+
+Look at the [`example/apps/`](./example/apps) directory for how to structure your applications.
+
+To download them directly, you may do this:
+
+```bash
+cd ~
+curl --location https://api.github.com/repos/hugojosefson/install-nodejs-and-pm2/tarball/master \
+  | tar xzv --strip-components=1 example
+```

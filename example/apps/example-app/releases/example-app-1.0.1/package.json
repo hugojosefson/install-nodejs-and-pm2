@@ -1,0 +1,14 @@
+{
+  "name": "example-app",
+  "private": true,
+  "description": "Example app that requires a dependency to listen to the process.env.PORT port.",
+  "version": "1.0.1",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ."
+  },
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.16.3"
+  }
+}

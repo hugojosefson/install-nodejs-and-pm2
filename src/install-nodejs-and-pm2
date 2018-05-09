@@ -66,7 +66,7 @@ Example commands, as the ${NODEJS_USER} user:
     \$ pm2 status
     \$ (cd apps && pm2 startOrReload ecosystem.config.js)
     \$ (cd apps/app1 && pm2 start --name app1 index.js)
-    \$ (cd apps/app2/build && pm2 start --name app2 npx -- serve -p 3002)
+    \$ (cd apps/second-app/build && pm2 start --name second-app npx -- serve -p 3002)
     \$ pm2 dash
     \$ pm2 logs
 

@@ -45,7 +45,7 @@ module.exports = {
      * Un-comment the example-app configuration to try it.
      */
     apps: [
-        // standardNodeApp({name: 'example-app', env: {PORT: 3001}}),
-        // standardNodeApp({name: 'second-app', env: {PORT: 3002}})
+        standardNodeApp({name: 'example-app', env: {PORT: 3001}}),
+        standardNodeApp({name: 'second-app', env: {PORT: 3002}})
     ]
 }
