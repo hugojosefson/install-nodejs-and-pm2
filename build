@@ -1,0 +1,8 @@
+#!/bin/bash
+
+set -e
+
+DIR=$(dirname $0)
+
+ECOSYSTEM_CONFIG_JS=$(<${DIR}/src/apps/ecosystem.config.js)
+envsubst < ${DIR}/src/install-nodejs-and-pm2 > ${DIR}/install-nodejs-and-pm2
