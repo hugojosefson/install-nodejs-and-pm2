@@ -33,7 +33,7 @@ su - ${NODEJS_USER} -c "pm2 update"
 
 ## Set up apps structure
 su - ${NODEJS_USER} -c "mkdir -p apps"
-su - ${NODEJS_USER} -c "cat | sed -r 's/BACKTICK/\\\`/g' > apps/ecosystem.config.js << 'EOF'
+su - ${NODEJS_USER} -c "cat > apps/ecosystem.config.js << 'EOF'
 /**
  * Generates an app config from minimal input.
  *
@@ -44,16 +44,16 @@ su - ${NODEJS_USER} -c "cat | sed -r 's/BACKTICK/\\\`/g' > apps/ecosystem.config
  */
 const standardNodeApp = (options = {}) => {
     if (typeof options.name === 'undefined') {
-        throw new Error(BACKTICKThe option 'name' must be defined.BACKTICK)
+        throw new Error(\`The option 'name' must be defined.\`)
     }
 
     if (typeof options.env === 'undefined' || typeof options.env.PORT === 'undefined') {
-        throw new Error(BACKTICKThe option 'env.PORT' must be defined for the app named '\${options.name}'.BACKTICK)
+        throw new Error(\`The option 'env.PORT' must be defined for the app named '\${options.name}'.\`)
     }
     return {
-        cwd: BACKTICKapps/\${options.name}/currentBACKTICK,
+        cwd: \`apps/\${options.name}/current\`,
         script: 'bash',
-        args: BACKTICK-c \"
+        args: \`-c \"
     set -e
     if [ -f yarn.lock ]; then
         yarn install
@@ -62,7 +62,7 @@ const standardNodeApp = (options = {}) => {
         npm install
         npm start || exit 1
      fi
-    \"BACKTICK,
+    \"\`,
         listen_timeout: 8000,
         min_uptime: 10000,
         restart_delay: 3000,

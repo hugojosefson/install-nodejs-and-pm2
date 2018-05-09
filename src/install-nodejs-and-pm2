@@ -33,7 +33,7 @@ su - ${NODEJS_USER} -c "pm2 update"
 
 ## Set up apps structure
 su - ${NODEJS_USER} -c "mkdir -p apps"
-su - ${NODEJS_USER} -c "cat | sed -r 's/BACKTICK/\\\`/g' > apps/ecosystem.config.js << 'EOF'
+su - ${NODEJS_USER} -c "cat > apps/ecosystem.config.js << 'EOF'
 $ECOSYSTEM_CONFIG_JS
 EOF"
 
