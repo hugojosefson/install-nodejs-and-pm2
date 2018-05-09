@@ -45,7 +45,7 @@ environment variables, or
 
 ...they will be updated when you re-run the script as root.
 
-## Configure and deploy apps
+## Configure apps
 
 Log in as the `nodejs` user.
 
@@ -108,6 +108,47 @@ For the apps to start when `pm2` starts, you must save the current process list:
 pm2 save
 ```
 Remember to `pm2 save` whenever you start or stop something that should stay started or stopped!
+
+## Deploy new version of app
+
+On your CI server or development machine, in the app's source directory, create the release artifact
+with `npm pack`. Then unpack it on the server, into the app's versioned directory in the `releases/`
+directory:
+
+```bash
+cd example-app
+
+# create example-app-1.0.1.tgz locally
+npm pack
+
+# unpack onto server, from your local machine via ssh
+env \
+  APP_NAME=$(node -p "require('./package.json').name") \
+  APP_VERSION=$(node -p "require('./package.json').version") \
+  bash -c '\
+    cat ${APP_NAME}-${APP_VERSION}.tgz | \
+    ssh nodejs@prod-server \
+      "mkdir -p apps/${APP_NAME}/releases/${APP_NAME}-${APP_VERSION} && \
+      tar xz -C apps/${APP_NAME}/releases/${APP_NAME}-${APP_VERSION} --strip-components=1" \
+  '
+```
+
+### Switch to new version
+
+On the server, in the app directory, symlink the version you wish to use to `current`.
+
+For example:
+
+```bash
+cd ~/apps/example-app
+rm current
+ln -s releases/example-app-1.0.1 current
+```
+
+Then reload the app:
+```bash
+pm2 startOrReload ~/apps/ecosystem.config.js
+```
 
 ## Example configuration and apps
 
