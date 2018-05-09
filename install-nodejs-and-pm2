@@ -1,0 +1,124 @@
+#!/usr/bin/env bash
+
+## Installs Node.js and pm2
+
+set -e
+
+## Config
+NODEJS_USER=${NODEJS_USER:-nodejs}
+NVM_VERSION=${NVM_VERSION:-0.33.11}
+NODEJS_VERSION=${NODEJS_VERSION:-10}
+
+NODEJS_HOME_DIR=${NODEJS_HOME_DIR:-/var/lib/$NODEJS_USER}
+NVM_DIR=${NODEJS_HOME_DIR}/.nvm
+
+## Install Node.js
+getent passwd | grep ^${NODEJS_USER}: || useradd --system --create-home --home-dir ${NODEJS_HOME_DIR} ${NODEJS_USER}
+su - ${NODEJS_USER} -c "mkdir -p $NVM_DIR"
+su - ${NODEJS_USER} -c "curl -o- https://raw.githubusercontent.com/creationix/nvm/v${NVM_VERSION}/install.sh | bash"
+su - ${NODEJS_USER} -c "nvm install ${NODEJS_VERSION}"
+su - ${NODEJS_USER} -c "nvm alias default ${NODEJS_VERSION}"
+su - ${NODEJS_USER} -c "npm install -g npm"
+su - ${NODEJS_USER} -c "npm install -g yarn"
+
+## Install pm2
+su - ${NODEJS_USER} -c "npm install -g pm2@latest"
+su - ${NODEJS_USER} -c "pm2 update"
+
+. ${NVM_DIR}/nvm.sh && \
+    pm2 startup \
+        --service-name pm2 \
+        --user ${NODEJS_USER} \
+        --hp ${NODEJS_HOME_DIR}
+
+## Set up apps structure
+su - ${NODEJS_USER} -c "mkdir -p apps"
+su - ${NODEJS_USER} -c "cat | sed -r 's/BACKTICK/\\\`/g' > apps/ecosystem.config.js << 'EOF'
+/**
+ * Generates an app config from minimal input.
+ *
+ * @param options App options.
+ * @param options.name Name of the app. The app is expected to be found in a directory with the same name. Required.
+ * @param options.env.PORT Required, because apps should look for it and listen to that port.
+ * @see https://pm2.keymetrics.io/docs/usage/application-declaration/
+ */
+const standardNodeApp = (options = {}) => {
+    if (typeof options.name === 'undefined') {
+        throw new Error(BACKTICKThe option 'name' must be defined.BACKTICK)
+    }
+
+    if (typeof options.env === 'undefined' || typeof options.env.PORT === 'undefined') {
+        throw new Error(BACKTICKThe option 'env.PORT' must be defined for the app named '\${options.name}'.BACKTICK)
+    }
+    return {
+        cwd: BACKTICKapps/\${options.name}/currentBACKTICK,
+        script: 'bash',
+        args: BACKTICK-c \"
+    set -e
+    if [ -f yarn.lock ]; then
+        yarn install
+        yarn start || exit 1
+    else
+        npm install
+        npm start || exit 1
+     fi
+    \"BACKTICK,
+        listen_timeout: 8000,
+        min_uptime: 10000,
+        restart_delay: 3000,
+        max_restarts: 24 * 60 * 60 * 1000 / 3000,
+        ...options,
+        env: {
+            NODE_ENV: 'production',
+            ...options.env
+        }
+    }
+}
+
+module.exports = {
+    /**
+     * Add app configurations here.
+     * Un-comment the example-app configuration to try it.
+     */
+    apps: [
+        // standardNodeApp({name: 'example-app', env: {PORT: 3001}}),
+        // standardNodeApp({name: 'app2', env: {PORT: 3002}})
+    ]
+}
+EOF"
+
+## Instructions
+su - ${NODEJS_USER} -c "node -e \"console.log(\\\`
+
+
+==============================================================================
+Node.js is now installed for user ${NODEJS_USER}.
+
+This message is proof, because it is generated from within Node.js as the
+${NODEJS_USER} user.
+
+pm2 runs on boot, as user ${NODEJS_USER}.
+
+You can manage the pm2 service like this:
+
+    \# service pm2 status
+    \# service pm2 start
+    \# service pm2 stop
+    \# service pm2 restart
+
+For more pm2 commands, log in as ${NODEJS_USER}:
+
+    \# su - ${NODEJS_USER}
+
+Example commands, as the ${NODEJS_USER} user:
+
+    \$ pm2 help
+    \$ pm2 status
+    \$ (cd apps && pm2 startOrReload ecosystem.config.js)
+    \$ (cd apps/app1 && pm2 start --name app1 index.js)
+    \$ (cd apps/app2/build && pm2 start --name app2 npx -- serve -p 3002)
+    \$ pm2 dash
+    \$ pm2 logs
+
+==============================================================================
+\\\`)\""
