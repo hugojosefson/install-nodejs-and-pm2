@@ -111,12 +111,14 @@ Remember to `pm2 save` whenever you start or stop something that should stay sta
 
 ## Example configuration and apps
 
-Look at the [`example/apps/`](./example/apps) directory for how to structure your applications.
+Look at the [`example/apps/`](./example/apps) directory for how to structure your applications, and
+configure them.
 
-To download them directly, you may do this:
+To download them directly, and overwrite your current config, you may do this as the `nodejs` user:
 
 ```bash
 cd ~
-curl --location https://api.github.com/repos/hugojosefson/install-nodejs-and-pm2/tarball/master \
-  | tar xzv --strip-components=1 example
+
+curl -sS -L https://api.github.com/repos/hugojosefson/install-nodejs-and-pm2/tarball/master \
+  | tar xzv --strip-components=2 '*/example'
 ```
