@@ -57,10 +57,10 @@ const standardNodeApp = (options = {}) => {
     set -e
     if [ -f yarn.lock ]; then
         yarn install
-        yarn start || exit 1
+        yarn start
     else
         npm install
-        npm start || exit 1
+        npm start
      fi
     \"\`,
         listen_timeout: 8000,
