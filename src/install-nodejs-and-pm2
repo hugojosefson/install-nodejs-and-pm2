@@ -34,21 +34,23 @@ su - ${NODEJS_USER} -c ". ${NVM_DIR}/nvm.sh && pm2 update"
 ## Set up apps structure
 su - ${NODEJS_USER} -c "mkdir -p apps"
 
-su - ${NODEJS_USER} -c "if [ ! -e apps/ecosystem.config.js ]; then \
-  cat > apps/ecosystem.config.js << 'EOF'
+if [ ! -e "${NODEJS_HOME_DIR}/apps/ecosystem.config.js" ]; then
+  su - ${NODEJS_USER} -c "cat > apps/ecosystem.config.js << 'EOF'
 $ECOSYSTEM_CONFIG_JS
-EOF \
-else \
-  echo 'Not overwriting existing apps/ecosystem.config.js' \
-fi"
+EOF"
+  echo "Created ${NODEJS_HOME_DIR}/apps/ecosystem.config.js"
+else
+  echo "Not overwriting existing ${NODEJS_HOME_DIR}/apps/ecosystem.config.js"
+fi
 
-su - ${NODEJS_USER} -c "if [ -e apps/ecosystem.config.js-helper.js ]; then \
-  echo 'Overwriting existing apps/ecosystem.config.js-helper.js' \
-fi \
-cat > apps/ecosystem.config.js-helper.js << 'EOF'
+if [ ! -e "${NODEJS_HOME_DIR}/apps/ecosystem.config.js-helper.js" ]; then
+  echo "Creating ${NODEJS_HOME_DIR}/apps/ecosystem.config.js-helper.js"
+else
+  echo "Overwriting existing ${NODEJS_HOME_DIR}/apps/ecosystem.config.js-helper.js"
+fi
+su - ${NODEJS_USER} -c "cat > apps/ecosystem.config.js-helper.js << 'EOF'
 $ECOSYSTEM_CONFIG_JS_HELPER_JS
-EOF \
-"
+EOF"
 
 ## Instructions
 su - ${NODEJS_USER} -c ". ${NVM_DIR}/nvm.sh && node -e \"console.log(\\\`
