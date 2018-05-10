@@ -12,6 +12,8 @@ const {name, version} = require('./package.json')
 const port = getPort(process.env)
 
 const app = require('express')()
+app.get('/', (req, res) => res.type('text').send(`This is ${name} version ${version}.\n`))
+
 const server = app.listen(port, () => {
   console.log(`${name} version ${version} listening to port ${port}...`)
 })
