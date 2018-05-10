@@ -32,24 +32,25 @@ NODEJS_VERSION=12 NODEJS_HOME_DIR=/srv/nodejs ./install-nodejs-and-pm2
 ## What it does
 
  * Creates system user `nodejs` if it does not already exist.
- * Installs Node.js via `nvm` for the `nodejs` user.
+ * Installs Node.js 10 via `nvm` for the `nodejs` user.
  * Installs latest versions of `npm`, `yarn`, `pm2`.
  * Sets up `pm2` to run as the `nodejs` user on boot.
- * Sets up `~nodejs/apps/` where configuration and apps live.
-     * **Overwrites `apps/ecosystem.config.js-helper.js`!**
-     * (Does not overwrite `apps/ecosystem.config.js` if it exists.)
+ * Sets up `/var/lib/nodejs/apps/` where configuration and apps live.
+     * Adds [`apps/ecosystem.config.js`](example/apps/ecosystem.config.js) unless it already exists.
+     * **Overwrites [`apps/ecosystem.config.js-helper`](example/apps/ecosystem.config.js-helper.js)** with the latest version.
  * Prints a message at the end, to prove Node.js was installed correctly.
 
-The script can be re-run as many times as you like.
+You may re-run `install-nodejs-and-pm2` as `root` as many times as you like. It will then reinstall
+software, replace [`apps/ecosystem.config.js-helper`](example/apps/ecosystem.config.js-helper.js),
+but not touch any existing [`apps/ecosystem.config.js`](example/apps/ecosystem.config.js).
 
 If you...
 
  * change any desired version numbers by setting corresponding
 environment variables, or
- * change any desired version numbers by editing the script, or
  * if newer versions of the installed packages are available,
 
-...they will be updated when you re-run the script as root.
+...they will be upgraded when you re-run the script as `root`.
 
 ## Configure apps
 
@@ -63,7 +64,7 @@ the `apps` folder. Add your apps' `pm2` configurations to `ecosystem.config.js`.
 A complete directory structure might look like this:
 
 ```
-apps/
+/var/lib/nodejs/apps/
 ├── ecosystem.config.js
 ├── ecosystem.config.js-helper.js
 ├── example-app
@@ -84,8 +85,8 @@ apps/
             └── package.json
 ```
 
-It is recommended to unpack each app in the `releases/` directory, and specify the version to use
-in the common `ecosystem.config.js`.
+Unpack each app version in the app's `releases/` directory, and specify the version to use in the
+common `ecosystem.config.js`.
 
 ## Run and save
 
@@ -147,21 +148,34 @@ Then reload the app(s):
 pm2 startOrReload ~/apps/ecosystem.config.js
 ```
 
-## Example configuration and apps
+## App structure
 
-Look at the [`example/apps/`](./example/apps) directory for how to structure your applications, and
-configure them.
-
-To download them directly, and overwrite your current config, you may do this as the `nodejs` user:
+Each app needs a `package.json` file with `scripts.start` set to something that starts the app. This
+is how each app is started by default by
+[`apps/ecosystem.config.js-helper`](example/apps/ecosystem.config.js-helper.js):
 
 ```bash
-cd ~
-
-curl -sS -L https://api.github.com/repos/hugojosefson/install-nodejs-and-pm2/tarball/master \
-  | tar xzv --strip-components=2 --wildcards '*/example'
+NODE_ENV=production yarn install && yarn start
 ```
 
-Then start them all as described above:
+...if there is a `yarn.lock` file. Otherwise,
+
+```bash
+NODE_ENV=production npm install && npm start
+```
+
+### Example apps
+
+Look at the [`example/apps/`](./example/apps) directory for how to structure your applications, and
+configure them. To download them directly, and overwrite your current config, you may do this as the
+`nodejs` user:
+
+```bash
+curl -sS -L https://api.github.com/repos/hugojosefson/install-nodejs-and-pm2/tarball/master \
+  | tar xzv --strip-components=2 --wildcards '*/example' -C ~
+```
+
+Then start all apps, do as described above:
 
 ```bash
 pm2 startOrReload ~/apps/ecosystem.config.js
