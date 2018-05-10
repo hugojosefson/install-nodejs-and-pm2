@@ -4,7 +4,7 @@ module.exports = {
     /**
      * Add app configurations here.
      *
-     * This will not be overwritten by `~/install-nodejs-and-pm2`.
+     * This will NOT be overwritten by `~/install-nodejs-and-pm2`.
      */
     apps: [
         createAppConfig({name: 'example-app', version: '1.0.1', env: {PORT: 3001}}),
