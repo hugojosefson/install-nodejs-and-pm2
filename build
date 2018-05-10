@@ -2,26 +2,30 @@
 
 ## Builds the ./install-nodejs-and-pm2 file from src/
 ## Builds the ./example/ecosystem.config.js file from src/
+## Builds the ./example/ecosystem.config.js-helper.js file from src/
 
 set -e
-
 
 DIR=$(dirname $0)
 
 ## install-nodejs-and-pm2
 SOURCE_FILE="${DIR}/src/install-nodejs-and-pm2"
 TARGET_FILE="${DIR}/install-nodejs-and-pm2"
-ECOSYSTEM_CONFIG_JS_FILE="${DIR}/src/apps/ecosystem.config.js"
 
+ECOSYSTEM_CONFIG_JS_FILE="${DIR}/src/apps/ecosystem.config.js"
 export ECOSYSTEM_CONFIG_JS_1="$(<${ECOSYSTEM_CONFIG_JS_FILE})"
 export ECOSYSTEM_CONFIG_JS_2="${ECOSYSTEM_CONFIG_JS_1//\`/\\\`}"
 export ECOSYSTEM_CONFIG_JS_3="${ECOSYSTEM_CONFIG_JS_2//\"/\\\"}"
 export ECOSYSTEM_CONFIG_JS="${ECOSYSTEM_CONFIG_JS_3//\$/\\$}"
-envsubst '$ECOSYSTEM_CONFIG_JS' < "${SOURCE_FILE}" > "${TARGET_FILE}"
 
-## ecosystem.config.js
-SOURCE_FILE="${DIR}/src/apps/ecosystem.config.js"
-TARGET_FILE="${DIR}/example/apps/ecosystem.config.js"
-cat "${SOURCE_FILE}" \
-  | sed -r 's:// standardNodeApp:standardNodeApp:g' \
-  > "${TARGET_FILE}"
+ECOSYSTEM_CONFIG_JS_HELPER_JS_FILE="${DIR}/src/apps/ecosystem.config.js-helper.js"
+export ECOSYSTEM_CONFIG_JS_HELPER_JS_1="$(<${ECOSYSTEM_CONFIG_JS_HELPER_JS_FILE})"
+export ECOSYSTEM_CONFIG_JS_HELPER_JS_2="${ECOSYSTEM_CONFIG_JS_HELPER_JS_1//\`/\\\`}"
+export ECOSYSTEM_CONFIG_JS_HELPER_JS_3="${ECOSYSTEM_CONFIG_JS_HELPER_JS_2//\"/\\\"}"
+export ECOSYSTEM_CONFIG_JS_HELPER_JS="${ECOSYSTEM_CONFIG_JS_HELPER_JS_3//\$/\\$}"
+
+envsubst '$ECOSYSTEM_CONFIG_JS $ECOSYSTEM_CONFIG_JS_HELPER_JS' < "${SOURCE_FILE}" > "${TARGET_FILE}"
+
+## example/ecosystem.config.js
+## example/ecosystem.config.js-helper.js
+cp ${DIR}/src/apps/ecosystem.config.js{,-helper.js} ${DIR}/example/apps/

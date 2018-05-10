@@ -33,9 +33,22 @@ su - ${NODEJS_USER} -c ". ${NVM_DIR}/nvm.sh && pm2 update"
 
 ## Set up apps structure
 su - ${NODEJS_USER} -c "mkdir -p apps"
-su - ${NODEJS_USER} -c "cat > apps/ecosystem.config.js << 'EOF'
+
+su - ${NODEJS_USER} -c "if [ ! -e apps/ecosystem.config.js ]; then \
+  cat > apps/ecosystem.config.js << 'EOF'
 $ECOSYSTEM_CONFIG_JS
-EOF"
+EOF \
+else \
+  echo 'Not overwriting existing apps/ecosystem.config.js' \
+fi"
+
+su - ${NODEJS_USER} -c "if [ -e apps/ecosystem.config.js-helper.js ]; then \
+  echo 'Overwriting existing apps/ecosystem.config.js-helper.js' \
+fi \
+cat > apps/ecosystem.config.js-helper.js << 'EOF'
+$ECOSYSTEM_CONFIG_JS_HELPER_JS
+EOF \
+"
 
 ## Instructions
 su - ${NODEJS_USER} -c ". ${NVM_DIR}/nvm.sh && node -e \"console.log(\\\`
@@ -64,9 +77,8 @@ Example commands, as the ${NODEJS_USER} user:
 
     \$ pm2 help
     \$ pm2 status
-    \$ (cd apps && pm2 startOrReload ecosystem.config.js)
-    \$ (cd apps/app1 && pm2 start --name app1 index.js)
-    \$ (cd apps/second-app/build && pm2 start --name second-app npx -- serve -p 3002)
+    \$ pm2 startOrReload ~/apps/ecosystem.config.js
+    \$ pm2 save
     \$ pm2 dash
     \$ pm2 logs
 

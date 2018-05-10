@@ -36,6 +36,8 @@ NODEJS_VERSION=12 NODEJS_HOME_DIR=/srv/nodejs ./install-nodejs-and-pm2
  * Installs latest versions of `npm`, `yarn`, `pm2`.
  * Sets up `pm2` to run as the `nodejs` user on boot.
  * Sets up `~nodejs/apps/` where configuration and apps live.
+     * **Overwrites `apps/ecosystem.config.js-helper.js`!**
+     * (Does not overwrite `apps/ecosystem.config.js` if it exists.)
  * Prints a message at the end, to prove Node.js was installed correctly.
 
 The script can be re-run as many times as you like.
@@ -63,6 +65,7 @@ A complete directory structure might look like this:
 ```
 apps/
 ├── ecosystem.config.js
+├── ecosystem.config.js-helper.js
 ├── example-app
 │   └── releases
 │       ├── example-app-1.0.0
@@ -162,4 +165,5 @@ Then start them all as described above:
 
 ```bash
 pm2 startOrReload ~/apps/ecosystem.config.js
+pm2 save
 ```
