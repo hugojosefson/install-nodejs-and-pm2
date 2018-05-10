@@ -54,7 +54,14 @@ environment variables, or
 
 ## Configure apps
 
-Log in as the `nodejs` user.
+Log in as the `nodejs` user:
+
+```bash
+ssh nodejs@prod-server
+
+# or if already logged in as root on the server:
+su - nodejs
+```
 
 The script sets up a directory `apps`, with an `ecosystem.config.js` file.
 
@@ -88,10 +95,44 @@ A complete directory structure might look like this:
 Unpack each app version in the app's `releases/` directory, and specify the version to use in the
 common `ecosystem.config.js`.
 
+## App structure
+
+Each app needs a `package.json` file with `scripts.start` set to something that starts the app. This
+is how each app is started by default by `pm2` via
+[`apps/ecosystem.config.js-helper`](example/apps/ecosystem.config.js-helper.js):
+
+```bash
+NODE_ENV=production yarn install && yarn start
+```
+
+...if there is a `yarn.lock` file. Otherwise,
+
+```bash
+NODE_ENV=production npm install && npm start
+```
+
+### Example apps
+
+Look at the [`example/apps/`](./example/apps) directory for how to structure your applications, and
+configure them. To download them directly, and overwrite your current config, you may do this as the
+`nodejs` user:
+
+```bash
+curl -sS -L https://api.github.com/repos/hugojosefson/install-nodejs-and-pm2/tarball/master \
+  | tar xzv --strip-components=2 --wildcards '*/example' -C ~
+```
+
+Then start all apps:
+
+```bash
+pm2 startOrReload ~/apps/ecosystem.config.js
+pm2 save
+```
+
 ## Run and save
 
-To start the apps defined in `apps/ecosystem.config.js`, log in as the `nodejs` user and use these
-commands:
+To start the apps defined in `apps/ecosystem.config.js`, log in as the `nodejs` user (`su - nodejs`)
+and use these commands:
 
 ```bash
 # Check current status
@@ -148,36 +189,3 @@ Then reload the app(s):
 pm2 startOrReload ~/apps/ecosystem.config.js
 ```
 
-## App structure
-
-Each app needs a `package.json` file with `scripts.start` set to something that starts the app. This
-is how each app is started by default by
-[`apps/ecosystem.config.js-helper`](example/apps/ecosystem.config.js-helper.js):
-
-```bash
-NODE_ENV=production yarn install && yarn start
-```
-
-...if there is a `yarn.lock` file. Otherwise,
-
-```bash
-NODE_ENV=production npm install && npm start
-```
-
-### Example apps
-
-Look at the [`example/apps/`](./example/apps) directory for how to structure your applications, and
-configure them. To download them directly, and overwrite your current config, you may do this as the
-`nodejs` user:
-
-```bash
-curl -sS -L https://api.github.com/repos/hugojosefson/install-nodejs-and-pm2/tarball/master \
-  | tar xzv --strip-components=2 --wildcards '*/example' -C ~
-```
-
-Then start all apps, do as described above:
-
-```bash
-pm2 startOrReload ~/apps/ecosystem.config.js
-pm2 save
-```
