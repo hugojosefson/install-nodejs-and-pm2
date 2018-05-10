@@ -11,6 +11,22 @@ const getPort = env => {
 const {name, version} = require('./package.json')
 const port = getPort(process.env)
 
-require('express')().listen(port, () => {
+
+const app = require('express')();
+const server = app.listen(port, () => {
     console.log(`${name} version ${version} listening to port ${port}...`)
+})
+
+
+process.on('SIGINT', () => {
+    console.log('Received SIGINT, will shut down...')
+    if (typeof server.stop === 'function') {
+        server.stop(() => {
+            console.log('HTTP Server has shut down and is not listening. Exiting.')
+            process.exit(0)
+        })
+    } else {
+        console.log('Exiting.')
+        process.exit(0)
+    }
 })
