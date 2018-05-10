@@ -184,8 +184,11 @@ env \
 
 On the server, edit the `ecosystem.config.js` file to specify which version to use.
 
-Then reload the app(s):
+Then tell `pm2` to reload the app:
+
 ```bash
-pm2 startOrReload ~/apps/ecosystem.config.js
+pm2 delete example-app
+pm2 start ~/apps/ecosystem.config.js --only example-app
+pm2 save
 ```
 
