@@ -1,10 +1,18 @@
 #!/bin/bash
 
 ## Builds the ./install-nodejs-and-pm2 file from src/
+## Checks that all example apps have the same js code.
 
 set -e
 
 DIR=$(dirname $0)
+
+## Example apps
+APPS=${DIR}/example/apps/*/releases/*/index.js
+FIRST_APP=$(echo ${APPS} | cut -d ' ' -f 1)
+for i in $APPS; do
+  diff -q ${FIRST_APP} ${i}
+done
 
 ## install-nodejs-and-pm2
 SOURCE_FILE="${DIR}/src/install-nodejs-and-pm2"
