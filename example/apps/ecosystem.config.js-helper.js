@@ -3,27 +3,27 @@
 // This file will be overwritten by ~/install-nodejs-and-pm2
 
 const validateOptionsOrThrow = options => {
-    if (typeof options.name === 'undefined') {
-        throw new Error(`The option 'name' must be defined.`)
-    }
+  if (typeof options.name === 'undefined') {
+    throw new Error(`The option 'name' must be defined.`)
+  }
 
-    if (typeof options.version === 'undefined') {
-        throw new Error(`The option 'version' must be defined.`)
-    }
+  if (typeof options.version === 'undefined') {
+    throw new Error(`The option 'version' must be defined.`)
+  }
 
-    if (typeof options.env === 'undefined' || typeof options.env.PORT === 'undefined') {
-        throw new Error(`The option 'env.PORT' must be defined for the app named '${options.name}'.`)
-    }
+  if (typeof options.env === 'undefined' || typeof options.env.PORT === 'undefined') {
+    throw new Error(`The option 'env.PORT' must be defined for the app named '${options.name}'.`)
+  }
 }
 
 const checkNodeAppExistsOrThrow = dir => {
-    const pkg = require(`${dir}/package.json`)
+  const pkg = require(`${dir}/package.json`)
 
-    if (pkg && pkg.scripts && pkg.scripts.start) {
-        // looks good
-    } else {
-        throw new Error(`No 'start' run-script found in ${dir}/package.json`)
-    }
+  if (pkg && pkg.scripts && pkg.scripts.start) {
+    // looks good
+  } else {
+    throw new Error(`No 'start' run-script found in ${dir}/package.json`)
+  }
 }
 
 /**
@@ -36,16 +36,16 @@ const checkNodeAppExistsOrThrow = dir => {
  * @see https://pm2.keymetrics.io/docs/usage/application-declaration/
  */
 const createAppConfig = (options = {}) => {
-    validateOptionsOrThrow(options)
+  validateOptionsOrThrow(options)
 
-    const cwd = `${__dirname}/${options.name}/releases/${options.name}-${options.version}`
-    checkNodeAppExistsOrThrow(cwd)
+  const cwd = `${__dirname}/${options.name}/releases/${options.name}-${options.version}`
+  checkNodeAppExistsOrThrow(cwd)
 
-    return {
-        cwd,
-        updateEnv: true,
-        script: 'bash',
-        args: `-c "
+  return {
+    cwd,
+    updateEnv: true,
+    script: 'bash',
+    args: `-c "
     set -e
     if [ -f yarn.lock ]; then
         yarn install
@@ -55,19 +55,18 @@ const createAppConfig = (options = {}) => {
         npm start
      fi
     "`,
-        listen_timeout: 8000,
-        min_uptime: 10000,
-        restart_delay: 3000,
-        max_restarts: 24 * 60 * 60 * 1000 / 3000,
-        ...options,
-        env: {
-            NODE_ENV: 'production',
-            ...options.env
-        }
+    listen_timeout: 8000,
+    min_uptime: 10000,
+    restart_delay: 3000,
+    max_restarts: 24 * 60 * 60 * 1000 / 3000,
+    ...options,
+    env: {
+      NODE_ENV: 'production',
+      ...options.env
     }
+  }
 }
 
-
 module.exports = {
-    createAppConfig
+  createAppConfig
 }
