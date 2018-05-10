@@ -13,17 +13,17 @@ NODEJS_HOME_DIR=${NODEJS_HOME_DIR:-/var/lib/$NODEJS_USER}
 NVM_DIR=${NODEJS_HOME_DIR}/.nvm
 
 ## Install Node.js
-getent passwd | grep ^${NODEJS_USER}: || useradd --system --create-home --home-dir ${NODEJS_HOME_DIR} ${NODEJS_USER}
+getent passwd | grep ^${NODEJS_USER}: || useradd --system --shell $(which bash) --create-home --home-dir ${NODEJS_HOME_DIR} ${NODEJS_USER}
 su - ${NODEJS_USER} -c "mkdir -p $NVM_DIR"
 su - ${NODEJS_USER} -c "curl -o- https://raw.githubusercontent.com/creationix/nvm/v${NVM_VERSION}/install.sh | bash"
-su - ${NODEJS_USER} -c "nvm install ${NODEJS_VERSION}"
-su - ${NODEJS_USER} -c "nvm alias default ${NODEJS_VERSION}"
-su - ${NODEJS_USER} -c "npm install -g npm"
-su - ${NODEJS_USER} -c "npm install -g yarn"
+su - ${NODEJS_USER} -c ". ${NVM_DIR}/nvm.sh && nvm install ${NODEJS_VERSION}"
+su - ${NODEJS_USER} -c ". ${NVM_DIR}/nvm.sh && nvm alias default ${NODEJS_VERSION}"
+su - ${NODEJS_USER} -c ". ${NVM_DIR}/nvm.sh && npm install -g npm"
+su - ${NODEJS_USER} -c ". ${NVM_DIR}/nvm.sh && npm install -g yarn"
 
 ## Install pm2
-su - ${NODEJS_USER} -c "npm install -g pm2@latest"
-su - ${NODEJS_USER} -c "pm2 update"
+su - ${NODEJS_USER} -c ". ${NVM_DIR}/nvm.sh && npm install -g pm2@latest"
+su - ${NODEJS_USER} -c ". ${NVM_DIR}/nvm.sh && pm2 update"
 
 . ${NVM_DIR}/nvm.sh && \
     pm2 startup \
@@ -102,7 +102,7 @@ module.exports = {
 EOF"
 
 ## Instructions
-su - ${NODEJS_USER} -c "node -e \"console.log(\\\`
+su - ${NODEJS_USER} -c ". ${NVM_DIR}/nvm.sh && node -e \"console.log(\\\`
 
 
 ==============================================================================

@@ -1,8 +1,11 @@
 # install-nodejs-and-pm2
 
-Script for installing Node.js and [pm2](https://pm2.keymetrics.io/), on a Linux server with for example CentOS or RHEL.
+Script for installing Node.js and [pm2](https://pm2.keymetrics.io/), on a Linux server with for example Ubuntu, Debian, CentOS or RHEL.
 
-Tested in RHEL 6.9.
+Tested in:
+
+ * Ubuntu 18.04
+ * RHEL 6.9
 
 ## Get the script
 
@@ -151,5 +154,5 @@ To download them directly, and overwrite your current config, you may do this as
 cd ~
 
 curl -sS -L https://api.github.com/repos/hugojosefson/install-nodejs-and-pm2/tarball/master \
-  | tar xzv --strip-components=2 '*/example'
+  | tar xzv --strip-components=2 --wildcards '*/example'
 ```
