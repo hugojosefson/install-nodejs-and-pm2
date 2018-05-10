@@ -63,7 +63,7 @@ ssh nodejs@prod-server
 su - nodejs
 ```
 
-The script sets up a directory `apps`, with an `ecosystem.config.js` file.
+The `install-nodejs-and-pm2` script sets up a directory `apps`, with an `ecosystem.config.js` file.
 
 The `ecosystem.config.js` file is default configured to expect apps to have one directory each in
 the `apps` folder. Add your apps' `pm2` configurations to `ecosystem.config.js`.
