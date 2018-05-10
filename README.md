@@ -4,8 +4,9 @@ Script for installing Node.js and [pm2](https://pm2.keymetrics.io/), on a Linux 
 
 Tested in:
 
- * Ubuntu 18.04
+ * Ubuntu 18.04 and 14.04
  * RHEL 6.9
+ * Debian 9 and 7
 
 ## Get the script
 
@@ -155,4 +156,10 @@ cd ~
 
 curl -sS -L https://api.github.com/repos/hugojosefson/install-nodejs-and-pm2/tarball/master \
   | tar xzv --strip-components=2 --wildcards '*/example'
+```
+
+Then start them all as described above:
+
+```bash
+pm2 startOrReload ~/apps/ecosystem.config.js
 ```
