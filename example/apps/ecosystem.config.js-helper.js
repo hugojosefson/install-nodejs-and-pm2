@@ -43,6 +43,7 @@ const createAppConfig = (options = {}) => {
 
     return {
         cwd,
+        updateEnv: true,
         script: 'bash',
         args: `-c "
     set -e
