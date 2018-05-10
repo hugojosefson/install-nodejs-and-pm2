@@ -1,6 +1,7 @@
 ## Testing in Docker
 
-To try the script in a Docker container, you may go back down to the project's root directory, and run:
+To try the script in a Docker container, you may go back down to the project's root directory, and
+run any of these lines:
 
 ```bash
 ./build && docker build -t install-nodejs-and-pm2:latest -f test/debian/7/Dockerfile .

@@ -1,7 +1,7 @@
 FROM debian:9
 MAINTAINER Hugo Josefson <hugo@josefson.org> (https://www.hugojosefson.com/)
 
-RUN echo "Ubuntu packages updated 2018-05-10T08:34:29.697Z"
+RUN echo "Packages updated 2018-05-10."
 RUN apt update && apt dist-upgrade -y --purge
 RUN apt install -y curl procps tree
 
