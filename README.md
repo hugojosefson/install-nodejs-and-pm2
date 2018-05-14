@@ -35,7 +35,7 @@ NODEJS_VERSION=12 NODEJS_HOME_DIR=/srv/nodejs ./install-nodejs-and-pm2
  * Installs Node.js 10 via `nvm` for the `nodejs` user.
  * Installs latest versions of `npm`, `yarn`, `pm2`.
  * Sets up `pm2` to run as the `nodejs` user on boot.
- * Sets up `/var/lib/nodejs/apps/` where configuration and apps live.
+ * Sets up `/var/nodejs/apps/` where configuration and apps live.
      * Adds [`apps/ecosystem.config.js`](example/apps/ecosystem.config.js) unless it already exists.
      * **Overwrites [`apps/ecosystem.config.js-helper`](example/apps/ecosystem.config.js-helper.js)** with the latest version.
  * Prints a message at the end, to prove Node.js was installed correctly.
@@ -71,7 +71,7 @@ the `apps` folder. Add your apps' `pm2` configurations to `ecosystem.config.js`.
 A complete directory structure might look like this:
 
 ```
-/var/lib/nodejs/apps/
+/var/nodejs/apps/
 ├── ecosystem.config.js
 ├── ecosystem.config.js-helper.js
 ├── example-app
