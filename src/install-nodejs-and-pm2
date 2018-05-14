@@ -4,6 +4,12 @@
 
 set -e
 
+## Must be run as root, or with sudo
+if (( $EUID != 0 )); then
+    echo "Please run this script as root, or even better: use sudo."
+    exit 1
+fi
+
 ## Config
 NODEJS_USER=${NODEJS_USER:-nodejs}
 NVM_VERSION=${NVM_VERSION:-0.33.11}
